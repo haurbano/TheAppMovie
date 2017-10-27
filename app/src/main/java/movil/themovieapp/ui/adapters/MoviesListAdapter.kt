@@ -14,11 +14,12 @@ import movil.themovieapp.models.Movie
  * Created by haurbano on 25/10/2017.
  */
 
-class MoviesListAdapter(val data : List<Movie>) : RecyclerView.Adapter<MoviesListAdapter.ViewHolder>(){
+class MoviesListAdapter(val data : List<Movie>, val listener : (Movie) -> Unit ) : RecyclerView.Adapter<MoviesListAdapter.ViewHolder>(){
 
     class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-        fun bind(movie : Movie){
+        fun bind(movie : Movie, listener : (Movie) -> Unit){
             with(itemView){
+                setOnClickListener{listener(movie)}
                 title_movie.text = movie.title
                 calification_movie.text = movie.vote_average.toString()
                 poster_movie.loadImage(MoviesApi.BASE_IMAGE_PATH + movie.poster_path)
@@ -34,7 +35,7 @@ class MoviesListAdapter(val data : List<Movie>) : RecyclerView.Adapter<MoviesLis
 
     override fun onBindViewHolder(holder: MoviesListAdapter.ViewHolder, position: Int) {
         val movie : Movie = data[position]
-        holder.bind(movie)
+        holder.bind(movie, listener)
     }
 
     override fun getItemCount(): Int = data.size

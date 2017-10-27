@@ -13,6 +13,7 @@ import movil.themovieapp.api.MoviesApi
 import movil.themovieapp.api.RestApi
 import movil.themovieapp.models.Movies
 import movil.themovieapp.ui.adapters.MoviesListAdapter
+import org.jetbrains.anko.intentFor
 
 class MoviesActivity : AppCompatActivity() {
 
@@ -25,7 +26,7 @@ class MoviesActivity : AppCompatActivity() {
 
     fun getMovies(page : Int = 1) {
         val moviesApi : MoviesApi = RestApi().moviesApi
-        moviesApi.getMovies()
+        moviesApi.getMovies(getString(R.string.API_KEY_TMDB))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -44,6 +45,6 @@ class MoviesActivity : AppCompatActivity() {
 
     fun loadData(data : Movies){
         recycler_view_movies.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
-        recycler_view_movies.adapter = MoviesListAdapter(data.results)
+        recycler_view_movies.adapter = MoviesListAdapter(data.results){ startActivity(intentFor<MovieDetailsActivity>("movie" to it)) }
     }
 }
