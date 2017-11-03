@@ -20,6 +20,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    testOptions{
+        unitTests{
+            includeAndroidResources = true
+        }
+    }
 }
 
 androidExtensions {
@@ -54,6 +60,9 @@ dependencies {
 
     // Anko commons
     compile "org.jetbrains.anko:anko-commons:0.10.2"
+
+    //test
+    testCompile "org.robolectric:robolectric:3.5.1"
 }
 repositories {
     mavenCentral()
