@@ -4,11 +4,10 @@ import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_movies.*
-import kotlinx.android.synthetic.main.adapter_movie.view.*
 import movil.themovieapp.R
 import movil.themovieapp.models.Movie
+import movil.themovieapp.models.Movies
 import movil.themovieapp.ui.adapters.MoviesListAdapter
-import org.jetbrains.anko.find
 import org.jetbrains.anko.firstChild
 import org.junit.Assert.*
 import org.junit.Before
@@ -34,6 +33,7 @@ class MoviesActivityTest{
     fun setup(){
         moviesActivity = Robolectric.setupActivity(MoviesActivity::class.java)
         controller = Robolectric.buildActivity(MoviesActivity::class.java)
+        controller.create().start().resume()
     }
 
     @Test
@@ -44,8 +44,6 @@ class MoviesActivityTest{
 
     @Test
     fun testActivityLifeCycle(){
-        // Start process
-        controller.create().start().resume()
 
         // Interrunp proccess
         controller.pause().resume()
@@ -56,22 +54,22 @@ class MoviesActivityTest{
     @Test
     fun testClickInItems(){
         val movies : MutableList<Movie> = mutableListOf()
-        val movi1 = Movie(1,"Movie 1","ES","Good movie", "/paht",5f,"2017-07-12")
+        val movie1 = Movie(1,"Movie 1","ES","Good movie", "/paht",5f,"2017-07-12")
         val movie2 = Movie(1,"Movie 1","ES","Good movie", "/paht",5f,"2017-07-12")
-        movies.add(movi1)
+        movies.add(movie1)
         movies.add(movie2)
 
         val ryclerView = moviesActivity.recycler_view_movies
         ryclerView.adapter = MoviesListAdapter(movies,{})
         ryclerView.layoutManager = LinearLayoutManager(moviesActivity)
-        val movieTitleExpected = movi1.title
+        val movieTitleExpected = "Thor: Ragnarok"
 
         ryclerView.firstChild { view -> view.performClick() }
 
         val shadoMoviesActivity = Shadows.shadowOf(moviesActivity)
 
         val intent = shadoMoviesActivity.nextStartedActivity
-        val movieTitleActual = intent.getParcelableExtra<Movie>("movie")
+        val movieTitleActual = intent.getParcelableExtra<Movie>("movie").title
         assertEquals("Titles are the same ",movieTitleExpected,movieTitleActual)
 
     }
